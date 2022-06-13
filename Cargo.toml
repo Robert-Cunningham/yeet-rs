@@ -8,6 +8,9 @@ readme = "README.md"
 description = "Kill the process hogging your ports"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "yeet"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "3.1.18", features = ["derive"] }

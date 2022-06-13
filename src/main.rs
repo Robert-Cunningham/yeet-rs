@@ -9,16 +9,10 @@ struct Args {
 
 use nix::{
     sys::signal::{self, Signal},
-    unistd::Pid,
+    unistd::{getuid, Pid, Uid},
 };
 use procfs::net::{TcpNetEntry, UdpNetEntry};
 
-enum NetEntry {
-    Tcp(TcpNetEntry),
-    Udp(UdpNetEntry),
-}
-
-/*
 trait NetEntry {
     fn port(&self) -> u16;
     fn inode(&self) -> u64;
@@ -41,35 +35,38 @@ impl NetEntry for UdpNetEntry {
         self.local_address.port()
     }
 }
-*/
 
 fn main() {
     let args = Args::parse();
 
-    let udp = true;
     let tcp = true;
+    let udp = true;
+    let ipv4 = true;
+    let ipv6 = true;
 
     let port = args.port;
 
-    let mut net_entries = Vec::<NetEntry>::new();
+    let mut target_socket_inodes = Vec::<u64>::new();
 
-    /*
-    match procfs::net::tcp() {
-        Ok(a) => net_entries.extend(a),
-        Err(e) => eprintln!("Failed to get IPv4 data"),
+    if tcp && ipv6 {
+        match procfs::net::tcp6() {
+            Ok(tcpentries) => {
+                let socket_inodes_tcp6 = tcpentries
+                    .into_iter()
+                    .filter(|tcpentry| tcpentry.local_address.port() == port)
+                    .map(|tcpentry| tcpentry.inode);
+
+                target_socket_inodes.extend(socket_inodes_tcp6)
+            }
+            Err(e) => {
+                eprintln!("{:?}", e);
+            }
+        }
     }
-
-    net_entries.extend(procfs::net::tcp().unwrap());
-    net_entries.extend(procfs::net::tcp6().unwrap());
-    net_entries.extend(procfs::net::udp().unwrap());
-    net_entries.extend(procfs::net::udp6().unwrap());
-    */
-
-    let inodes_tcp6 = procfs::net::tcp6()
-        .unwrap()
-        .into_iter()
-        .filter(|tcpentry| tcpentry.local_address.port() == port)
-        .map(|tcpentry| tcpentry.inode);
+    //    .unwrap()
+    //    .into_iter()
+    //    .filter(|tcpentry| tcpentry.local_address.port() == port)
+    //    .map(|tcpentry| tcpentry.inode);
 
     let inodes_tcp4 = procfs::net::tcp()
         .unwrap()
@@ -87,38 +84,37 @@ fn main() {
         .unwrap()
         .into_iter()
         .filter(|tcpentry| tcpentry.local_address.port() == port)
-        .map(|tcpentry| tcpentry.inode)
-        .collect();
+        .map(|tcpentry| tcpentry.inode);
 
-    let mut inodes = Vec::<u64>::new();
+    target_socket_inodes.extend(inodes_tcp4);
+    //socket_inodes.extend(socket_inodes_tcp6);
+    target_socket_inodes.extend(inodes_udp4);
+    target_socket_inodes.extend(inodes_udp6);
 
-    inodes.extend(inodes_tcp4);
-    inodes.extend(inodes_tcp6);
-    inodes.extend(inodes_udp4);
-    inodes.extend(inodes_udp6);
+    let mut open_port_processes = Vec::<i32>::new();
 
     for process in procfs::process::all_processes().unwrap() {
-        /*
-        match process.fd() {
-            Ok(a) => {
-                println!("ok");
-            }
-            Err(b) => {
-                println!("error");
-            }
-        }
-        */
-        if let Ok(fds) = process.fd() {
-            for fd in fds {
-                if let procfs::process::FDTarget::Socket(k) = fd.target {
-                    if inodes.contains(&k) {
-                        println!("{:?}", process.pid);
-                        signal::kill(Pid::from_raw(process.pid), Signal::SIGTERM).unwrap();
+        if let Ok(open_fds) = process.fd() {
+            for open_fd in open_fds {
+                if let procfs::process::FDTarget::Socket(socket_inode) = open_fd.target {
+                    if target_socket_inodes.contains(&socket_inode) {
+                        open_port_processes.push(process.pid)
                     }
                 }
             }
         }
     }
+
+    if open_port_processes.len() == 0 {
+        eprintln!("No processes found.");
+        if !getuid().is_root() {
+            println!("Consider re-running yeet as root.")
+        }
+    }
+
+    open_port_processes.into_iter().for_each(|pid| {
+        signal::kill(Pid::from_raw(pid), Signal::SIGTERM).unwrap();
+    });
 
     println!("I yote {}", args.port);
 }
