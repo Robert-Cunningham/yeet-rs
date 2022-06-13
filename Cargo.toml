@@ -12,6 +12,7 @@ description = "Kill the process hogging your ports"
 [dependencies]
 clap = { version = "3.1.18", features = ["derive"] }
 procfs = "0.12.0"
+nix = "0.23.1"
 
 [profile.release]
 opt-level = 'z'     # Optimize for size.
