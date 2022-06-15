@@ -5,7 +5,7 @@ use clap::Parser;
 #[cfg_attr(target_os = "macos", path = "macos.rs")]
 mod os;
 
-use crate::os::{get_processes, is_root, send_sigterm};
+use crate::os::{get_pids, is_root, send_sigkill, send_sigterm};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
@@ -16,9 +16,8 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    println!("I yote {}", args.port);
 
-    let processes = get_processes(args.port);
+    let processes = get_pids(args.port);
 
     if processes.len() == 0 {
         eprintln!("No processes found.");
@@ -27,7 +26,7 @@ fn main() {
         }
     }
 
-    send_sigterm(processes);
+    send_sigterm(&processes);
 
-    send_sigkill(processes);
+    //send_sigkill(&processes);
 }

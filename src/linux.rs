@@ -3,7 +3,7 @@ use nix::{
     unistd::{getuid, Pid},
 };
 
-pub fn get_processes(port: u16) -> Vec<i32> {
+pub fn get_pids(port: u16) -> Vec<i32> {
     let socket_inodes = get_socket_inodes_with_port(port);
     let open_port_processes = get_processes_with_sockets(socket_inodes);
 
@@ -90,15 +90,15 @@ fn get_processes_with_sockets(target_socket_inodes: Vec<u64>) -> Vec<i32> {
     return open_port_processes;
 }
 
-pub fn send_sigterm(target_pids: Vec<i32>) {
+pub fn send_sigterm(target_pids: &Vec<i32>) {
     target_pids.into_iter().for_each(|pid| {
-        signal::kill(Pid::from_raw(pid), Signal::SIGTERM).unwrap();
+        signal::kill(Pid::from_raw(*pid), Signal::SIGTERM).unwrap();
     });
 }
 
-pub fn send_sigkill(target_pids: Vec<i32>) {
+pub fn send_sigkill(target_pids: &Vec<i32>) {
     target_pids.into_iter().for_each(|pid| {
-        signal::kill(Pid::from_raw(pid), Signal::SIGKILL).unwrap();
+        signal::kill(Pid::from_raw(*pid), Signal::SIGKILL).unwrap();
     });
 }
 

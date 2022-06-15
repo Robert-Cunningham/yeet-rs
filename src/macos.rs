@@ -1,6 +1,8 @@
 use std::process::Command;
 
-pub fn get_pids() {
+use nix::unistd::getuid;
+
+pub fn get_pids(port: u16) -> Vec<i32> {
     let lsof = Command::new("lsof")
         .arg("-t")
         .arg("-i:5000")
@@ -15,12 +17,28 @@ pub fn get_pids() {
         .filter_map(|s| str::parse::<i32>(&s).ok())
         .collect();
 
+    return pids;
+}
+
+pub fn send_sigterm(pids: &Vec<i32>) {
     pids.iter().for_each(|pid| {
         Command::new("kill")
             .arg(pid.to_string())
             .status()
             .expect("Failed to kill process.");
     });
+}
 
-    println!("{:?}", pids)
+pub fn send_sigkill(pids: &Vec<i32>) {
+    pids.iter().for_each(|pid| {
+        Command::new("kill")
+            .arg("-9")
+            .arg(pid.to_string())
+            .status()
+            .expect("Failed to kill process.");
+    });
+}
+
+pub fn is_root() -> bool {
+    getuid().is_root()
 }
