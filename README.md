@@ -50,13 +50,19 @@ $ ./target/release/yeet --version
 
 ## FAQ
 
-### Why use `yeet` instead of `sudo kill -9 $(sudo lsof -t -i:3000)`?
-Nope, you should probably use that instead. But if you're lazy and can't remember it without stack exchange, `yeet` will get the job done.
+### Why yeet instead of `sudo kill -9 $(sudo lsof -t -i:3000)`?
+You should probably use that other command instead. But if you're lazy and can't remember it without stack exchange, `yeet` will get the job done.
 
-### Why is yeet written in Rust? Shouldn't this be like a two line shell script?
+### Why would I ever use yeet? Shouldn't this be like a two line shell script?
 Yes.
 
-### Aren't you a horrible person for piping curl into sudo sh?
+### Why would I ever use yeet? Can't I just alias that lsof command instead?
+Yes.
+
+### Why is yeet written in Rust? Wouldn't $OTHER_LANGUAGE be better?
+Yes.
+
+### Aren't you a horrible person for suggesting that anyone pipe curl into sudo sh?
 Yes.
 
 ### Does yeet support any other options?
