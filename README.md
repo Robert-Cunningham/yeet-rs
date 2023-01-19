@@ -1,4 +1,4 @@
-# 🚨🚨🚨 Yeet 🚨🚨🚨
+# 🚨 Yeet 🚨
 
 `yeet <PORT>` kills any process on `<PORT>`.
 
@@ -45,9 +45,22 @@ cargo install yeet-rs
 $ git clone https://github.com/Robert-Cunningham/yeet-rs
 $ cd yeet-rs
 $ cargo build --release
-$ ./target/release/yeet 3000
+$ ./target/release/yeet --version
 ```
 
+## FAQ
+
+### Why use `yeet` instead of `sudo kill -9 $(sudo lsof -t -i:3000)`?
+Nope, you should probably use that instead. But if you're lazy and can't remember it without stack exchange, `yeet` will get the job done.
+
+### Why is yeet written in Rust? Shouldn't this be like a two line shell script?
+Yes.
+
+### Aren't you a horrible person for piping curl into sudo sh?
+Yes.
+
+### Does yeet support any other options?
+`--version` and `--help`, but only because it was more annoying to remove them than to leave them in.
 
 ## Acknowledgements
 The authors would like to thank [Terry](https://www.youtube.com/watch?v=2Bjy5YQ5xPc) for her contribution to humanity.
