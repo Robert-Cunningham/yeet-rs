@@ -4,21 +4,17 @@
 
 ## Quick start
 
-
-### Example 1
 You're trying to start your server, but it won't start because something else is already using port 3000. 
 ```
 yeet 3000
 ```
 
-### Example 2
 You're trying to start your docker container, but it won't start because something else is already using port 80. 
 
 ```
 yeet 80
 ```
 
-### Example 3
 You're trying to start your `$IMPORTANT_THING`, but it won't start because `$SOMETHING_ANNOYING` is already using port `$PORT`. 
 
 ```
