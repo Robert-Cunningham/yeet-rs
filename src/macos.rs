@@ -5,7 +5,7 @@ use nix::unistd::getuid;
 pub fn get_pids(port: u16) -> Vec<i32> {
     let lsof = Command::new("lsof")
         .arg("-t")
-        .arg("-i:5000")
+        .arg(format!("-i:{}", port))
         .output()
         .expect("Failed to execute lsof");
 
