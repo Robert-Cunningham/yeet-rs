@@ -1,6 +1,6 @@
 # 🚨 Yeet 🚨
 
-`yeet <PORT>` kills any process on `<PORT>`.
+`yeet <PORT>` kills any process on `<PORT>`. Yeet works on Linux and MacOS.
 
 ## Quick start
 
