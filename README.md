@@ -4,7 +4,7 @@
 
 ## Installation
 ```
-curl -fsSL https://yeet.today/install.sh | sudo /bin/bash
+sudo /bin/bash -c "$(curl -fsSL https://yeet.today/install.sh)"
 ```
 
 ## Usage
