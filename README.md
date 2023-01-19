@@ -4,7 +4,7 @@
 
 ## Installation
 ```
-curl -fsSL https://raw.githubusercontent.com/Robert-Cunningham/yeet-rs/main/install.sh | sudo /bin/bash
+curl -fsSL https://yeet.today/install.sh | sudo /bin/bash
 ```
 
 ## Usage
