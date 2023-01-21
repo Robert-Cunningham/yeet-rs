@@ -1,4 +1,4 @@
-# 🚨 Yeet 🚨 | Kill that other process running on your port
+# 🚨 Yeet 🚨 that other process running on your port
 
 `yeet <PORT>` kills any process on `<PORT>`. 
 
