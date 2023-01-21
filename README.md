@@ -1,4 +1,4 @@
-# 🚨 Yeet 🚨 that other process running on your port
+# 🚨 Yeet 🚨 the process running on your port
 
 `yeet <PORT>` kills any process on `<PORT>`. 
 
@@ -58,6 +58,9 @@ Yes.
 Yes.
 
 ### Why is yeet written in Rust? Wouldn't $OTHER_LANGUAGE be better?
+Yes.
+
+### Isn't yeet basically just a wrapper around lsof and kill?
 Yes.
 
 ### Aren't you a horrible person for suggesting that anyone pipe curl into sudo sh?
